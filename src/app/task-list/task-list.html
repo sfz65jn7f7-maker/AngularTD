@@ -1,5 +1,6 @@
 <div class="container">
   <input class="search" [(ngModel)]="query" placeholder="Rechercher une tâche..." />
+  <p class="count">Recherche : {{ query() }}</p>
 
   <p class="count">{{ count() }} tâche(s)</p>
 
