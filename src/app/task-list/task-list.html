@@ -1,13 +1,19 @@
-@if (tasks.length === 0) {
+<p>{{ count() }} tâche(s)</p>
+
+@if (tasks().length === 0) {
   <p class="empty">Aucune tâche pour l'instant</p>
 } @else {
   <ul>
-    @for (task of tasks; track task.id) {
+    @for (task of tasks(); track task.id) {
       <li>
-        {{ task.title | uppercase }} : {{ task.dueDate | date:'dd/MM/yyyy' }}
+        {{ task.title | uppercase }} [{{ task.priority }}]
+        @if (task.dueDate) {
+          : {{ task.dueDate | date:'dd/MM/yyyy' }}
+        }
       </li>
     }
   </ul>
 }
 
+<button (click)="addSample()">Ajouter une tâche</button>
 <button (click)="clear()">Vider la liste</button>
