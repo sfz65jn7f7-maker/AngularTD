@@ -1,0 +1,18 @@
+<div class="info">
+  <span class="title" [class.done]="task().completed">{{ task().title | uppercase }}</span>
+  <span [class]="'badge ' + task().priority">{{ task().priority }}</span>
+  @if (task().dueDate) {
+    <span class="date">📅 {{ task().dueDate | date:'dd/MM/yyyy' }}</span>
+  }
+  @if (task().completed) {
+    <span class="done-badge">✔ Terminée</span>
+  }
+</div>
+
+<div class="buttons">
+  @if (!task().completed) {
+    <button class="btn btn-success" (click)="markDone()">Terminer</button>
+  }
+  <button class="btn btn-secondary" (click)="edit.emit()">Modifier</button>
+  <button class="btn btn-danger" (click)="remove.emit(task().id)">Supprimer</button>
+</div>

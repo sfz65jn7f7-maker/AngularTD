@@ -1,0 +1,13 @@
+@if (isOpen()) {
+  <div class="backdrop" (click)="close()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header>
+        <h2><ng-content select="[modal-title]" /></h2>
+        <button (click)="close()">✕</button>
+      </header>
+      <div class="body">
+        <ng-content />
+      </div>
+    </div>
+  </div>
+}

@@ -1,2 +1,12 @@
 <app-header />
-<app-task-list />
+
+<nav class="nav">
+  <button [class.active]="page() === 'tasks'" (click)="page.set('tasks')">Mes tâches</button>
+  <button [class.active]="page() === 'demo'" (click)="page.set('demo')">Démo des signals</button>
+</nav>
+
+@if (page() === 'tasks') {
+  <app-task-list />
+} @else {
+  <app-signal-demo />
+}

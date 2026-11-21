@@ -1,0 +1,58 @@
+<div class="container">
+  <h2>Démonstrations des signals</h2>
+  <section class="card">
+    <h3>0. Exercice du cours : ajouter une tâche</h3>
+    <p>Compteur (computed) : <strong>{{ taskCount() }} tâche(s)</strong></p>
+    <ul>
+      @for (t of tasks(); track t.id) {
+        <li>{{ t.title }} [{{ t.priority }}]</li>
+      } @empty {
+        <li>Aucune tâche</li>
+      }
+    </ul>
+    <div class="row">
+      <button class="btn btn-primary" (click)="addTask()">Ajouter une tâche (update)</button>
+      <button class="btn btn-danger" (click)="clearTasks()">Vider (set)</button>
+    </div>
+    <p class="note">La liste et le compteur se mettent à jour ensemble, parce qu'on crée un nouveau tableau avec [...items, task].</p>
+  </section>
+
+  <section class="card">
+    <h3>1. Compteur : signal, set, update, computed</h3>
+    <p class="big">{{ counter() }}</p>
+    <p>Double (computed) : <strong>{{ double() }}</strong></p>
+    <p>Parité (computed) : <strong>{{ parity() }}</strong></p>
+    <div class="row">
+      <button class="btn btn-primary" (click)="increment()">+1 (update)</button>
+      <button class="btn btn-secondary" (click)="decrement()">-1 (update)</button>
+      <button class="btn btn-danger" (click)="reset()">Remettre à 0 (set)</button>
+    </div>
+    <p class="note">On lit un signal avec des parenthèses : counter(). Les valeurs double et parité se recalculent toutes seules.</p>
+  </section>
+
+  <section class="card">
+    <h3>2. Liste dans un signal</h3>
+    <p>{{ fruitCount() }} élément(s)</p>
+    <ul>
+      @for (f of fruits(); track f) {
+        <li>{{ f }}</li>
+      }
+    </ul>
+    <div class="row">
+      <button class="btn btn-primary" (click)="addFruit()">Ajouter (update)</button>
+      <button class="btn btn-danger" (click)="clearFruits()">Vider (set)</button>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>3. Le piège : push() ne met pas l'écran à jour</h3>
+    <p>Ce que voit le signal : <strong>{{ trapCount() }}</strong> élément(s)</p>
+    <p>Taille réelle du tableau : <strong>{{ realLength() }}</strong> élément(s)</p>
+    <div class="row">
+      <button class="btn btn-danger" (click)="badPush()">push() (mauvais)</button>
+      <button class="btn btn-primary" (click)="goodAdd()">update avec [...list] (bon)</button>
+      <button class="btn btn-secondary" (click)="resetTrap()">Réinitialiser</button>
+    </div>
+    <p class="note">Clique sur push() : la taille réelle augmente mais « ce que voit le signal » reste bloqué. Clique ensuite sur le bon bouton : tout se remet à jour.</p>
+  </section>
+</div>

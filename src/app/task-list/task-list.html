@@ -1,19 +1,46 @@
-<p>{{ count() }} tâche(s)</p>
+<div class="container">
+  <input class="search" [(ngModel)]="query" placeholder="Rechercher une tâche..." />
 
-@if (tasks().length === 0) {
-  <p class="empty">Aucune tâche pour l'instant</p>
-} @else {
-  <ul>
-    @for (task of tasks(); track task.id) {
-      <li>
-        {{ task.title | uppercase }} [{{ task.priority }}]
-        @if (task.dueDate) {
-          : {{ task.dueDate | date:'dd/MM/yyyy' }}
-        }
-      </li>
-    }
-  </ul>
-}
+  <p class="count">{{ count() }} tâche(s)</p>
 
-<button (click)="addSample()">Ajouter une tâche</button>
-<button (click)="clear()">Vider la liste</button>
+  @if (filteredTasks().length === 0) {
+    <p class="empty">Aucune tâche pour l'instant</p>
+  } @else {
+    <ul class="list">
+      @for (task of filteredTasks(); track task.id) {
+        <li class="card">
+          @if (editingId() === task.id) {
+            <div class="edit">
+              <input class="edit-input" [(ngModel)]="editTitle" />
+              <select class="edit-select" [(ngModel)]="editPriority">
+                <option value="low">low</option>
+                <option value="medium">medium</option>
+                <option value="high">high</option>
+              </select>
+              <button class="btn btn-primary" (click)="saveEdit()">Enregistrer</button>
+              <button class="btn btn-secondary" (click)="cancelEdit()">Annuler</button>
+            </div>
+          } @else {
+            <app-task-card
+              [task]="task"
+              (completed)="onCompleted($event)"
+              (edit)="startEdit(task)"
+              (remove)="remove($event)" />
+          }
+        </li>
+      }
+    </ul>
+  }
+
+  <div class="footer">
+    <button class="btn btn-primary" (click)="addSample()">Ajouter une tâche</button>
+    <button class="btn btn-secondary" (click)="clear()">Vider la liste</button>
+    <button class="btn btn-secondary" (click)="showModal.set(true)">Ouvrir la modale</button>
+  </div>
+
+  <app-modal [(isOpen)]="showModal">
+    <span modal-title>Détails de TaskFlow</span>
+    <p>Ce contenu est projeté dans la modale.</p>
+    <p>{{ count() }} tâche(s) au total.</p>
+  </app-modal>
+</div>
