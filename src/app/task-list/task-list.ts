@@ -1,8 +1,9 @@
-import { Component, computed, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Task } from '../task.model';
 import { Modal } from '../modal/modal';
 import { TaskCard } from '../task-card/task-card';
+import { TaskService } from '../services/task.service';
 
 @Component({
   selector: 'app-task-list',
@@ -11,6 +12,8 @@ import { TaskCard } from '../task-card/task-card';
   styleUrl: './task-list.css'
 })
 export class TaskList {
+  private taskService = inject(TaskService);
+
   query = signal('');
   showModal = signal(false);
 
@@ -19,46 +22,36 @@ export class TaskList {
   editTitle = signal('');
   editPriority = signal<Task['priority']>('medium');
 
-  tasks = signal<Task[]>([
-    { id: 1, title: 'Lire le cours Angular', completed: false, priority: 'high', dueDate: '2026-11-15' },
-    { id: 2, title: 'Installer le CLI', completed: false, priority: 'medium', dueDate: '2026-11-16' },
-    { id: 3, title: 'Créer TaskFlow', completed: false, priority: 'low', dueDate: '2026-11-17' }
-  ]);
-
+  // la liste vient du service
+  tasks = this.taskService.tasks;
   count = computed(() => this.tasks().length);
+
   filteredTasks = computed(() =>
     this.tasks().filter(t =>
       t.title.toLowerCase().includes(this.query().toLowerCase())
     )
   );
 
-  private nextId = 4;
-
-  add(task: Task) {
-    this.tasks.update(items => [...items, task]);
-  }
-
   addSample() {
-    this.add({
-      id: this.nextId++,
-      title: `Nouvelle tâche ${this.nextId - 1}`,
+    const id = this.taskService.nextId();
+    this.taskService.add({
+      id,
+      title: `Nouvelle tâche ${id}`,
       completed: false,
       priority: 'medium'
     });
   }
 
   clear() {
-    this.tasks.set([]);
-  }
-
-  onCompleted(id: number) {
-    this.tasks.update(items =>
-      items.map(t => (t.id === id ? { ...t, completed: true } : t))
-    );
+    this.taskService.clear();
   }
 
   remove(id: number) {
-    this.tasks.update(items => items.filter(t => t.id !== id));
+    this.taskService.remove(id);
+  }
+
+  onCompleted(id: number) {
+    this.taskService.complete(id);
   }
 
   startEdit(task: Task) {
@@ -72,15 +65,10 @@ export class TaskList {
     const title = this.editTitle().trim();
     if (id === null || title === '') return;
 
-    this.tasks.update(items =>
-      items.map(t =>
-        t.id === id ? { ...t, title: title, priority: this.editPriority() } : t
-      )
-    );
+    this.taskService.update(id, { title, priority: this.editPriority() });
     this.editingId.set(null);
   }
 
-  // MODIFIER : annuler
   cancelEdit() {
     this.editingId.set(null);
   }

@@ -1,0 +1,23 @@
+<div class="container">
+  <h2>Mon panier</h2>
+
+  @if (cart.isEmpty()) {
+    <p class="empty">Panier vide</p>
+  } @else {
+    <ul class="list">
+      @for (item of cart.items(); track item.product.id) {
+        <li class="card item">
+          <span class="name">{{ item.product.name }}</span>
+          <span>{{ item.quantity }} × {{ item.product.price | number:'1.2-2' }} €</span>
+          <span class="sub">{{ (item.quantity * item.product.price) | number:'1.2-2' }} €</span>
+          <button class="btn btn-danger" (click)="cart.removeFromCart(item.product.id)">Retirer</button>
+        </li>
+      }
+    </ul>
+
+    <p class="total">
+      Total : {{ cart.totalPrice() | number:'1.2-2' }} € ({{ cart.totalCount() }} article(s))
+    </p>
+    <button class="btn btn-danger" (click)="cart.clear()">Vider le panier</button>
+  }
+</div>

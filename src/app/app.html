@@ -2,11 +2,14 @@
 
 <nav class="nav">
   <button [class.active]="page() === 'tasks'" (click)="page.set('tasks')">Mes tâches</button>
+  <button [class.active]="page() === 'shop'" (click)="page.set('shop')">Boutique</button>
+  <button [class.active]="page() === 'cart'" (click)="page.set('cart')">Panier ({{ cart.totalCount() }})</button>
   <button [class.active]="page() === 'demo'" (click)="page.set('demo')">Démo des signals</button>
 </nav>
 
-@if (page() === 'tasks') {
-  <app-task-list />
-} @else {
-  <app-signal-demo />
+@switch (page()) {
+  @case ('tasks') { <app-task-list /> }
+  @case ('shop') { <app-shop /> }
+  @case ('cart') { <app-cart /> }
+  @case ('demo') { <app-signal-demo /> }
 }

@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { CartService } from '../services/cart.service';
 
 @Component({
   selector: 'app-header',
@@ -9,6 +10,7 @@ import { Component } from '@angular/core';
 export class Header {
   title = 'TaskFlow';
   canDelete = false;
+  cart = inject(CartService);
 
   rename() {
     this.title = 'Mes tâches';

@@ -1,0 +1,25 @@
+<div class="container">
+  <h2>Boutique</h2>
+
+  <section class="card">
+    <h3>Créer un produit</h3>
+    <div class="row">
+      <input class="field" [(ngModel)]="name" placeholder="Nom du produit" />
+      <input class="field" type="number" min="0" [(ngModel)]="price" placeholder="Prix" />
+      <button class="btn btn-primary" (click)="create()">Créer le produit</button>
+    </div>
+    @if (message()) {
+      <p class="error">{{ message() }}</p>
+    }
+  </section>
+
+  <ul class="grid">
+    @for (p of cart.products(); track p.id) {
+      <li class="card product">
+        <span class="name">{{ p.name }}</span>
+        <span class="price">{{ p.price | number:'1.2-2' }} €</span>
+        <button class="btn btn-primary" (click)="cart.addToCart(p)">Ajouter au panier</button>
+      </li>
+    }
+  </ul>
+</div>
